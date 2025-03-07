@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
-
+import React, { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { ApiError } from "@/interfaces/ApiError";
 
-const Login = () => {
+// Create a separate component for the login form content
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get("redirect") || "/";
@@ -115,6 +115,14 @@ const Login = () => {
         </div>
       </form>
     </div>
+  );
+}
+
+const Login = () => {
+  return (
+    <Suspense fallback={<Loader className="w-1/4 h-[60vh]" />}>
+      <LoginForm />
+    </Suspense>
   );
 };
 
