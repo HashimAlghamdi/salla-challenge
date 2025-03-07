@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container {
+  @apply mx-auto relative;
+}
+
+@layer base {
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+  }
+
+  button:disabled {
+    @apply opacity-70;
+  }
+
+  button {
+    @apply transition-colors duration-200;
+
+    &:hover:not(:disabled) {
+      @apply bg-primary/90;
+    }
+  }
+}
+
+.ltr {
+  direction: ltr;
+}
+
+body {
+  @apply font-regular text-md text-right;
+}
+.product-carousel {
+  .swiper-slide {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+
+    &-active {
+      opacity: 1;
+    }
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    &::after {
+      font-size: 16px !important;
+      font-weight: bold;
+    }
+  }
+
+  .swiper-button-prev {
+    left: 20px;
+  }
+
+  .swiper-button-next {
+    right: 20px;
+  }
+}
