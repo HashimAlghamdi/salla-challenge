@@ -8,7 +8,7 @@ import Loader from "./Loader";
 // Lazy load the Select component
 const Select = lazy(() => import("react-select"));
 
-const CatalogToolbar = ({
+const CatalogToolbarView = ({
   onSearch,
   onCategoryChange,
 }: {
@@ -134,6 +134,23 @@ const CatalogToolbar = ({
           </Suspense>
         </div>
       </div>
+    </Suspense>
+  );
+};
+
+const CatalogToolbar = ({
+  onSearch,
+  onCategoryChange,
+}: {
+  onSearch: (query: string) => void;
+  onCategoryChange: (categoryId: number | string) => void;
+}) => {
+  return (
+    <Suspense fallback={<Loader className="w-1/4 h-[60vh]" />}>
+      <CatalogToolbarView
+        onSearch={onSearch}
+        onCategoryChange={onCategoryChange}
+      />
     </Suspense>
   );
 };

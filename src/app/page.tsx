@@ -1,7 +1,14 @@
 "use client";
 
 import { useProducts } from "@/contexts/ProductsContext";
-import { useEffect, useState, useMemo, useCallback, useRef, Suspense } from "react";
+import {
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  Suspense,
+} from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCarousel from "./components/ProductsCarousel";
 import ProductCard from "./components/ProductCard";
@@ -10,19 +17,21 @@ import CatalogToolbar from "./components/CatalogToolbar";
 import ErrorMessage from "./components/ErrorMessage";
 import Link from "next/link";
 
-export default function Home() {
+const HomeView = () => {
   const { products, isLoading, error } = useProducts();
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | number>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string | number>(
+    "all"
+  );
   const [page, setPage] = useState(1);
   const itemsPerPage = 8;
   const catalogRef = useRef<HTMLDivElement>(null);
 
   // Read URL params when component mounts or URL changes
   useEffect(() => {
-    const categoryFromUrl = searchParams.get('category');
-    const searchFromUrl = searchParams.get('search');
+    const categoryFromUrl = searchParams.get("category");
+    const searchFromUrl = searchParams.get("search");
 
     if (categoryFromUrl) {
       setSelectedCategory(Number(categoryFromUrl));
@@ -36,7 +45,7 @@ export default function Home() {
 
     // Scroll to catalog if either param exists
     if (categoryFromUrl || searchFromUrl) {
-      catalogRef.current?.scrollIntoView({ behavior: 'smooth' });
+      catalogRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [searchParams]);
 
@@ -95,7 +104,7 @@ export default function Home() {
       return (
         <div className="col-span-full text-center py-8">
           <h2 className="text-xl mb-4">لا توجد منتجات متطابقة مع البحث</h2>
-          <Link 
+          <Link
             href="/"
             className="text-primary hover:underline"
             onClick={() => {
@@ -130,12 +139,23 @@ export default function Home() {
           {renderProducts()}
         </div>
 
-        {displayedProducts.length > 0 && displayedProducts.length < filteredProducts.length && (
-          <div className="w-full py-4">
-            <Loader className="w-8 h-8" />
-          </div>
-        )}
+        {displayedProducts.length > 0 &&
+          displayedProducts.length < filteredProducts.length && (
+            <div className="w-full py-4">
+              <Loader className="w-8 h-8" />
+            </div>
+          )}
       </div>
     </Suspense>
   );
-}
+};
+
+const Home = () => {
+  return (
+    <Suspense fallback={<Loader className="w-1/4 h-[60vh]" />}>
+      <HomeView />
+    </Suspense>
+  );
+};
+
+export default Home;
