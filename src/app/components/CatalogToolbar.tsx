@@ -80,59 +80,61 @@ const CatalogToolbar = ({
   };
 
   return (
-    <div className="flex items-center justify-between gap-4 mb-4">
-      <div className="flex flex-col gap-1 flex-1">
-        <label htmlFor="product_query" className="hidden">
-          ابحث عن منتج
-        </label>
-        <input
-          type="text"
-          id="product_query"
-          name="product_query"
-          defaultValue={getCurrentSearch()}
-          className="w-full p-2 bg-white appearance-none rounded-md border text-md"
-          placeholder="ادخل اسم المنتج..."
-          onChange={(e) => debouncedSearch(e.target.value)}
-        />
-      </div>
-      <div className="flex flex-col gap-1 shrink-0 sm:min-w-[180px]">
-        <label htmlFor="categories" className="hidden">
-          اختر تصنيف
-        </label>
-        <Suspense
-          fallback={
-            <div className="p-2 bg-white border rounded-md text-md h-[38px] flex items-center justify-center">
-              <Loader className="w-5 h-5" />
-            </div>
-          }
-        >
-          <Select
-            options={categoryOptions}
-            value={getCurrentOption()}
-            isRtl={true}
-            placeholder="اختر تصنيف..."
-            noOptionsMessage={() => "لا توجد نتائج"}
-            classNames={{
-              control: () => "p-1 bg-white border rounded-md text-md",
-              option: () => "p-2 hover:bg-gray-100 cursor-pointer",
-              menu: () => "mt-1 bg-white border rounded-md shadow-lg",
-            }}
-            theme={(theme) => ({
-              ...theme,
-              colors: {
-                ...theme.colors,
-                primary: "#004956",
-                primary25: "#BAF3E6",
-                primary50: "#76E8CD",
-              },
-            })}
-            onChange={(option) =>
-              handleCategoryChange(option as CategoryOption)
-            }
+    <Suspense fallback={<Loader className="w-1/4 h-[60vh]" />}>
+      <div className="flex items-center justify-between gap-4 mb-4">
+        <div className="flex flex-col gap-1 flex-1">
+          <label htmlFor="product_query" className="hidden">
+            ابحث عن منتج
+          </label>
+          <input
+            type="text"
+            id="product_query"
+            name="product_query"
+            defaultValue={getCurrentSearch()}
+            className="w-full p-2 bg-white appearance-none rounded-md border text-md"
+            placeholder="ادخل اسم المنتج..."
+            onChange={(e) => debouncedSearch(e.target.value)}
           />
-        </Suspense>
+        </div>
+        <div className="flex flex-col gap-1 shrink-0 sm:min-w-[180px]">
+          <label htmlFor="categories" className="hidden">
+            اختر تصنيف
+          </label>
+          <Suspense
+            fallback={
+              <div className="p-2 bg-white border rounded-md text-md h-[38px] flex items-center justify-center">
+                <Loader className="w-5 h-5" />
+              </div>
+            }
+          >
+            <Select
+              options={categoryOptions}
+              value={getCurrentOption()}
+              isRtl={true}
+              placeholder="اختر تصنيف..."
+              noOptionsMessage={() => "لا توجد نتائج"}
+              classNames={{
+                control: () => "p-1 bg-white border rounded-md text-md",
+                option: () => "p-2 hover:bg-gray-100 cursor-pointer",
+                menu: () => "mt-1 bg-white border rounded-md shadow-lg",
+              }}
+              theme={(theme) => ({
+                ...theme,
+                colors: {
+                  ...theme.colors,
+                  primary: "#004956",
+                  primary25: "#BAF3E6",
+                  primary50: "#76E8CD",
+                },
+              })}
+              onChange={(option) =>
+                handleCategoryChange(option as CategoryOption)
+              }
+            />
+          </Suspense>
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 

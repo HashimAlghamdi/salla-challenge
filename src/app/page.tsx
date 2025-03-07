@@ -1,7 +1,7 @@
 "use client";
 
 import { useProducts } from "@/contexts/ProductsContext";
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCarousel from "./components/ProductsCarousel";
 import ProductCard from "./components/ProductCard";
@@ -115,7 +115,7 @@ export default function Home() {
   };
 
   return (
-    <>
+    <Suspense fallback={<Loader className="w-1/4 h-[60vh]" />}>
       <div className="w-full bg-gray-100 rounded-lg mb-8">
         <ProductCarousel products={products} />
       </div>
@@ -136,6 +136,6 @@ export default function Home() {
           </div>
         )}
       </div>
-    </>
+    </Suspense>
   );
 }

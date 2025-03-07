@@ -10,7 +10,7 @@ import { useCart } from "@/contexts/CartContext";
 import { ApiError } from "@/interfaces/ApiError";
 
 // Create a separate component for the login form content
-function LoginForm() {
+const Login = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get("redirect") || "/";
@@ -50,78 +50,72 @@ function LoginForm() {
   };
 
   return (
-    <div className="sm:max-w-[700px] mx-auto">
-      <div className="flex flex-col text-center items-center justify-center mb-6">
-        <h2 className="text-lg">تسجيل الدخول</h2>
-        <span className="text-xs text-gray-500">
-          قم بتسجيل الدخول لمتابعة التسوق
-        </span>
-      </div>
-      <ErrorMessage error={error} />
-      <form
-        method="post"
-        action="#"
-        className="flex flex-col w-full"
-        onSubmit={handleSubmit}
-      >
-        <div className="mb-4">
-          <label className="block mb-2 text-md" htmlFor="username">
-            البريد الإلكتروني
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            autoComplete="true"
-            className="w-full p-2 bg-white appearance-none rounded-md border text-md"
-            placeholder="البريد الإلكتروني.."
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2 text-md" htmlFor="password">
-            كلمة المرور
-          </label>
-          <input
-            type="password"
-            name="password"
-            autoComplete="true"
-            id="password"
-            className="w-full p-2 bg-white appearance-none rounded-md border text-md"
-            placeholder="كلمة المرور.."
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col gap-4">
-          <button
-            type="submit"
-            disabled={isLoading || !email || !password}
-            className={`w-full bg-primary text-secondary p-2 text-md rounded-md flex items-center justify-center ${
-              isLoading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
-          >
-            {isLoading ? <Loader className="w-5 h-5" /> : "دخول"}
-          </button>
-          <div>
-            <Link
-              href="/signup"
-              className="text-primary underline p-2 text-md rounded-md"
-            >
-              إنشاء حساب جديد
-            </Link>
-          </div>
-        </div>
-      </form>
-    </div>
-  );
-}
-
-const Login = () => {
-  return (
     <Suspense fallback={<Loader className="w-1/4 h-[60vh]" />}>
-      <LoginForm />
+      <div className="sm:max-w-[700px] mx-auto">
+        <div className="flex flex-col text-center items-center justify-center mb-6">
+          <h2 className="text-lg">تسجيل الدخول</h2>
+          <span className="text-xs text-gray-500">
+            قم بتسجيل الدخول لمتابعة التسوق
+          </span>
+        </div>
+        <ErrorMessage error={error} />
+        <form
+          method="post"
+          action="#"
+          className="flex flex-col w-full"
+          onSubmit={handleSubmit}
+        >
+          <div className="mb-4">
+            <label className="block mb-2 text-md" htmlFor="username">
+              البريد الإلكتروني
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              autoComplete="true"
+              className="w-full p-2 bg-white appearance-none rounded-md border text-md"
+              placeholder="البريد الإلكتروني.."
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2 text-md" htmlFor="password">
+              كلمة المرور
+            </label>
+            <input
+              type="password"
+              name="password"
+              autoComplete="true"
+              id="password"
+              className="w-full p-2 bg-white appearance-none rounded-md border text-md"
+              placeholder="كلمة المرور.."
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-4">
+            <button
+              type="submit"
+              disabled={isLoading || !email || !password}
+              className={`w-full bg-primary text-secondary p-2 text-md rounded-md flex items-center justify-center ${
+                isLoading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
+            >
+              {isLoading ? <Loader className="w-5 h-5" /> : "دخول"}
+            </button>
+            <div>
+              <Link
+                href="/signup"
+                className="text-primary underline p-2 text-md rounded-md"
+              >
+                إنشاء حساب جديد
+              </Link>
+            </div>
+          </div>
+        </form>
+      </div>
     </Suspense>
   );
 };
