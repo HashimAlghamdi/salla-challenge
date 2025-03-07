@@ -46,6 +46,7 @@ const Cart = () => {
       </div>
     );
   }
+console.log();
 
   return (
     <div className="flex flex-col gap-4">
@@ -60,12 +61,10 @@ const Cart = () => {
               href={`/product/${item.product.id}`}
               className="flex items-start justify-center gap-4 flex-1"
             >
-              <Image
+              <img
                 src={item.product.imageURL}
                 alt={item.product.name}
-                width={80}
-                height={80}
-                className="rounded-md object-cover"
+                className="rounded-md w-[80px] h-[80px] object-cover"
               />
               <div className="flex flex-col flex-1 gap-1">
                 <h4>{item.product.name}</h4>
