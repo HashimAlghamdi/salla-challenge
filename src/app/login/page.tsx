@@ -3,20 +3,20 @@
 import React, { useState } from "react";
 
 import Link from "next/link";
-import { authService } from "@/services/auth.service";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import { ApiError } from "@/interfaces/ApiError";
 
 const Login = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/';
-  const productId = searchParams.get('productId');
-  const quantity = searchParams.get('quantity');
-  
+  const redirectPath = searchParams.get("redirect") || "/";
+  const productId = searchParams.get("productId");
+  const quantity = searchParams.get("quantity");
+
   const { login } = useAuth();
   const { addToCart } = useCart();
   const [email, setEmail] = useState("");
@@ -31,17 +31,17 @@ const Login = () => {
 
     try {
       await login(email, password);
-      
+
       // If there's a product to add to cart
       if (productId) {
         await addToCart(Number(productId), Number(quantity) || 1);
       }
-      
+
       router.replace(decodeURIComponent(redirectPath));
     } catch (err) {
       setError(
         err instanceof Error && "response" in err
-          ? (err as any).response.data
+          ? (err as ApiError).response.data
           : "حدث خطأ أثناء تسجيل الدخول"
       );
     } finally {

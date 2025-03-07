@@ -4,6 +4,7 @@ import { Cart, CartContextType } from "@/interfaces/Cart";
 
 import { useAuth } from "./AuthContext";
 import { cartService } from "@/services/cart.service";
+import { ApiError } from "@/interfaces/ApiError";
 
 const CartContext = createContext<CartContextType>({
   cart: null,
@@ -35,7 +36,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await cartService.getCart();
       setCart(data);
     } catch (err) {
-      setError("حدث خطأ أثناء تحميل السلة");
+      setError(
+        err instanceof Error && "response" in err
+          ? (err as ApiError).response.data
+          : "حدث خطأ أثناء تحميل السلة"
+      );
       setCart(null);
     } finally {
       setIsLoading(false);
@@ -55,7 +60,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       await cartService.addToCart({ productId, quantity });
       await fetchCart();
     } catch (err) {
-      setError("حدث خطأ أثناء الإضافة إلى السلة");
+      setError(
+        err instanceof Error && "response" in err
+          ? (err as ApiError).response.data
+          : "حدث خطأ أثناء الإضافة إلى السلة"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -69,14 +78,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setIsLoading(true);
       setError(null);
-      const data = await cartService.updateCartItem(itemId, {
+      await cartService.updateCartItem(itemId, {
         id: itemId,
         productId,
         quantity,
       });
       await fetchCart();
     } catch (err) {
-      setError("حدث خطأ أثناء تحديث السلة");
+      setError(
+        err instanceof Error && "response" in err
+          ? (err as ApiError).response.data
+          : "حدث خطأ أثناء تحديث السلة"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +102,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       await cartService.deleteCartItem(itemId);
       await fetchCart(); // Refresh cart after deletion
     } catch (err) {
-      setError("حدث خطأ أثناء حذف المنتج");
+      setError(
+        err instanceof Error && "response" in err
+          ? (err as ApiError).response.data
+          : "حدث خطأ أثناء حذف المنتج"
+      );
     } finally {
       setIsLoading(false);
     }

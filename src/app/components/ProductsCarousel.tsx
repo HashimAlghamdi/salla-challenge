@@ -8,6 +8,7 @@ import { Navigation, Autoplay, EffectFade } from "swiper/modules";
 import ImagePlaceholderComponent from "./ImagePlaceholderComponent";
 import { useImageError } from "@/hooks/useImageError";
 import { useState, useEffect } from "react";
+import { Swiper as SwiperType } from "swiper";
 
 const INITIAL_LOAD = 3;
 const LOAD_MORE = 2;
@@ -21,13 +22,13 @@ const ProductCarousel = ({ products }: { products: Product[] }) => {
     setVisibleProducts(products.slice(0, INITIAL_LOAD));
   }, [products]);
 
-  const handleSlideChange = (swiper: any) => {
+  const handleSlideChange = (swiper: SwiperType) => {
     if (swiper.activeIndex >= visibleProducts.length - 2) {
       const nextIndex = visibleProducts.length;
       const nextProducts = products.slice(nextIndex, nextIndex + LOAD_MORE);
 
       if (nextProducts.length > 0) {
-        setVisibleProducts(prev => [...prev, ...nextProducts]);
+        setVisibleProducts((prev) => [...prev, ...nextProducts]);
       }
     }
   };
@@ -38,7 +39,7 @@ const ProductCarousel = ({ products }: { products: Product[] }) => {
         spaceBetween={30}
         effect="fade"
         fadeEffect={{
-          crossFade: true
+          crossFade: true,
         }}
         speed={800}
         navigation={true}

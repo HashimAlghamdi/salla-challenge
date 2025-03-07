@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React from "react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
@@ -7,19 +7,12 @@ import Link from "next/link";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
 import SaudiRiyal from "@/assets/images/saudi-riyal.svg";
-import debounce from "lodash/debounce";
+
 import QuantityControls from "../components/QuantityControls";
 
 const Cart = () => {
   const { cart, isLoading, error, updateCartItem, deleteCartItem } = useCart();
   const { isLoggedIn } = useAuth();
-
-  const debouncedUpdateQuantity = useCallback(
-    debounce((itemId: number, productId: number, quantity: number) => {
-      updateCartItem(itemId, productId, quantity);
-    }, 800),
-    []
-  );
 
   if (isLoading) {
     return <Loader className="w-1/4 h-[60vh]" />;
@@ -33,8 +26,8 @@ const Cart = () => {
     return (
       <div className="text-center py-8">
         <h2 className="text-xl mb-4">يرجى تسجيل الدخول لعرض السلة</h2>
-        <Link 
-          href={`/login?redirect=${encodeURIComponent('/cart')}`} 
+        <Link
+          href={`/login?redirect=${encodeURIComponent("/cart")}`}
           className="text-primary hover:underline"
         >
           تسجيل الدخول
@@ -67,10 +60,12 @@ const Cart = () => {
               href={`/product/${item.product.id}`}
               className="flex items-start justify-center gap-4 flex-1"
             >
-              <img
+              <Image
                 src={item.product.imageURL}
                 alt={item.product.name}
-                className="rounded-md w-[80px] h-[80px] object-cover"
+                width={80}
+                height={80}
+                className="rounded-md object-cover"
               />
               <div className="flex flex-col flex-1 gap-1">
                 <h4>{item.product.name}</h4>
@@ -93,7 +88,9 @@ const Cart = () => {
             <div className="flex items-center justify-center gap-4">
               <QuantityControls
                 quantity={item.quantity}
-                onUpdate={(value) => updateCartItem(item.id, item.product.id, value)}
+                onUpdate={(value) =>
+                  updateCartItem(item.id, item.product.id, value)
+                }
                 isLoading={isLoading}
               />
               <button

@@ -5,41 +5,42 @@ import { useRouter } from "next/navigation";
 import { authService } from "@/services/auth.service";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/ErrorMessage";
+import { ApiError } from "@/interfaces/ApiError";
 
 const Signup = () => {
-    const router = useRouter();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [error, setError] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-  
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setError("");
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-      if (password !== confirmPassword) {
-        setError("كلمات المرور غير متطابقة");
-        return;
-      }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
 
-      setIsLoading(true);
-  
-      try {
-        await authService.signup({ email, password, firstName, lastName });
-        router.push('/login');
-      } catch (err) {
-        setError(
-          err instanceof Error && "response" in err
-            ? (err as any).response.data
-            : "حدث خطأ أثناء إنشاء الحساب"
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (password !== confirmPassword) {
+      setError("كلمات المرور غير متطابقة");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await authService.signup({ email, password, firstName, lastName });
+      router.push("/login");
+    } catch (err) {
+      setError(
+        err instanceof Error && "response" in err
+          ? (err as ApiError).response.data
+          : "حدث خطأ أثناء إنشاء الحساب"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="sm:max-w-[700px] mx-auto">
       <div className="flex flex-col text-center items-center justify-center mb-6">
@@ -49,7 +50,12 @@ const Signup = () => {
         </span>
       </div>
       <ErrorMessage error={error} />
-      <form method="post" action="#" className="flex flex-col w-full" onSubmit={handleSubmit}>
+      <form
+        method="post"
+        action="#"
+        className="flex flex-col w-full"
+        onSubmit={handleSubmit}
+      >
         <div className="mb-4">
           <label className="block mb-2 text-md" htmlFor="firstName">
             الاسم الأول
@@ -129,12 +135,12 @@ const Signup = () => {
           <button
             type="submit"
             disabled={
-              isLoading || 
-              !email || 
-              !password || 
-              !confirmPassword || 
-              !firstName || 
-              !lastName || 
+              isLoading ||
+              !email ||
+              !password ||
+              !confirmPassword ||
+              !firstName ||
+              !lastName ||
               password !== confirmPassword
             }
             className="w-full bg-primary text-secondary p-2 text-md rounded-md flex items-center justify-center"

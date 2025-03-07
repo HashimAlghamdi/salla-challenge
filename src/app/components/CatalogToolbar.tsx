@@ -1,4 +1,4 @@
-import React, { useState, useCallback, Suspense, lazy } from "react";
+import React, { useCallback, Suspense, lazy } from "react";
 import { useCategories } from "@/contexts/CategoriesContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import debounce from "lodash/debounce";
@@ -29,43 +29,51 @@ const CatalogToolbar = ({
 
   // Get the current selected option based on URL
   const getCurrentOption = () => {
-    const categoryFromUrl = searchParams.get('category');
+    const categoryFromUrl = searchParams.get("category");
     if (!categoryFromUrl) return categoryOptions[0];
-    
-    return categoryOptions.find(
-      option => option.value === Number(categoryFromUrl)
-    ) || categoryOptions[0];
+
+    return (
+      categoryOptions.find(
+        (option) => option.value === Number(categoryFromUrl)
+      ) || categoryOptions[0]
+    );
   };
 
   // Get current search query from URL
   const getCurrentSearch = () => {
-    return searchParams.get('search') || '';
+    return searchParams.get("search") || "";
   };
 
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       if (query) {
-        router.push(`/?search=${encodeURIComponent(query)}${searchParams.get('category') ? `&category=${searchParams.get('category')}` : ''}`);
+        router.push(
+          `/?search=${encodeURIComponent(query)}${
+            searchParams.get("category")
+              ? `&category=${searchParams.get("category")}`
+              : ""
+          }`
+        );
       } else {
-        const categoryParam = searchParams.get('category');
-        router.push(categoryParam ? `/?category=${categoryParam}` : '/');
+        const categoryParam = searchParams.get("category");
+        router.push(categoryParam ? `/?category=${categoryParam}` : "/");
       }
       onSearch(query.toLowerCase());
     }, 300),
     [searchParams]
   );
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(e.target.value);
-  };
-
   const handleCategoryChange = (option: CategoryOption | null) => {
     if (option) {
-      const searchQuery = searchParams.get('search');
+      const searchQuery = searchParams.get("search");
       if (option.value === "all") {
-        router.push(searchQuery ? `/?search=${searchQuery}` : '/');
+        router.push(searchQuery ? `/?search=${searchQuery}` : "/");
       } else {
-        router.push(`/?category=${option.value}${searchQuery ? `&search=${searchQuery}` : ''}`);
+        router.push(
+          `/?category=${option.value}${
+            searchQuery ? `&search=${searchQuery}` : ""
+          }`
+        );
       }
       onCategoryChange(option.value);
     }
@@ -91,11 +99,13 @@ const CatalogToolbar = ({
         <label htmlFor="categories" className="hidden">
           اختر تصنيف
         </label>
-        <Suspense fallback={
-          <div className="p-2 bg-white border rounded-md text-md h-[38px] flex items-center justify-center">
-            <Loader className="w-5 h-5" />
-          </div>
-        }>
+        <Suspense
+          fallback={
+            <div className="p-2 bg-white border rounded-md text-md h-[38px] flex items-center justify-center">
+              <Loader className="w-5 h-5" />
+            </div>
+          }
+        >
           <Select
             options={categoryOptions}
             value={getCurrentOption()}
@@ -116,7 +126,9 @@ const CatalogToolbar = ({
                 primary50: "#76E8CD",
               },
             })}
-            onChange={(option) => handleCategoryChange(option as CategoryOption)}
+            onChange={(option) =>
+              handleCategoryChange(option as CategoryOption)
+            }
           />
         </Suspense>
       </div>

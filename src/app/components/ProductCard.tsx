@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const { handleImageError, hasImageError } = useImageError();
-  const { categories, setSelectedCategory } = useCategories();
+  const { categories } = useCategories();
   const { addToCart, cart, updateCartItem, deleteCartItem } = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
