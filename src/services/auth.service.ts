@@ -1,4 +1,4 @@
-import { apiClient } from "@/config/client";
+import { apiClient } from "@/utils/client";
 
 interface LoginRequest {
   email: string;

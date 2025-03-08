@@ -1,4 +1,4 @@
-import { apiClient } from "@/config/client";
+import { apiClient } from "@/utils/client";
 import { Cart, UpdateCartRequest } from "@/interfaces/Cart";
 
 export const cartService = {
