@@ -43,7 +43,7 @@ describe('HomeView', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     (useProducts as jest.Mock).mockReturnValue({
       products: mockProducts,
       isLoading: false,
@@ -87,7 +87,7 @@ describe('HomeView', () => {
     render(<HomeView />);
     const searchInput = screen.getByPlaceholderText('ابحث عن منتج');
     await userEvent.type(searchInput, 'Test Product 1');
-    
+
     await waitFor(() => {
       expect(screen.getByText('Test Product 1')).toBeInTheDocument();
       expect(screen.queryByText('Test Product 2')).not.toBeInTheDocument();
@@ -98,7 +98,7 @@ describe('HomeView', () => {
     render(<HomeView />);
     const categorySelect = screen.getByRole('combobox');
     await userEvent.selectOptions(categorySelect, '1');
-    
+
     await waitFor(() => {
       expect(screen.getByText('Test Product 1')).toBeInTheDocument();
       expect(screen.queryByText('Test Product 2')).not.toBeInTheDocument();
@@ -114,8 +114,8 @@ describe('HomeView', () => {
     render(<HomeView />);
     const nextPageButton = screen.getByRole('button', { name: /next/i });
     await userEvent.click(nextPageButton);
-    
+
     // Verify page change effects
     // Add assertions based on your pagination implementation
   });
-}); 
+});

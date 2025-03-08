@@ -1,40 +1,40 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import ProductCard from "../ProductCard";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
-import { useCart } from "@/contexts/CartContext";
-import { useCategories } from "@/contexts/CategoriesContext";
-import { useImageError } from "@/hooks/useImageError";
+import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import ProductCard from '../components/ProductCard';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
+import { useCategories } from '@/contexts/CategoriesContext';
+import { useImageError } from '@/hooks/useImageError';
 
 // Mock the hooks
-jest.mock("next/navigation", () => ({
+jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock("@/contexts/AuthContext", () => ({
+jest.mock('@/contexts/AuthContext', () => ({
   useAuth: jest.fn(),
 }));
 
-jest.mock("@/contexts/CartContext", () => ({
+jest.mock('@/contexts/CartContext', () => ({
   useCart: jest.fn(),
 }));
 
-jest.mock("@/contexts/CategoriesContext", () => ({
+jest.mock('@/contexts/CategoriesContext', () => ({
   useCategories: jest.fn(),
 }));
 
-jest.mock("@/hooks/useImageError", () => ({
+jest.mock('@/hooks/useImageError', () => ({
   useImageError: jest.fn(),
 }));
 
-describe("ProductCard", () => {
+describe('ProductCard', () => {
   const mockProduct = {
     id: 1,
-    name: "Test Product",
-    description: "Test Description",
+    name: 'Test Product',
+    description: 'Test Description',
     price: 99.99,
-    imageURL: "test.jpg",
+    imageURL: 'test.jpg',
     categoryId: 1,
   };
 
@@ -62,7 +62,7 @@ describe("ProductCard", () => {
       categories: [
         {
           id: 1,
-          categoryName: "Test Category",
+          categoryName: 'Test Category',
         },
       ],
     });
@@ -73,30 +73,28 @@ describe("ProductCard", () => {
     });
   });
 
-  it("renders product information correctly", () => {
+  it('renders product information correctly', () => {
     render(<ProductCard product={mockProduct} />);
 
     expect(screen.getByText(mockProduct.name)).toBeInTheDocument();
-    expect(screen.getByText("Test Category")).toBeInTheDocument();
-    expect(screen.getByText("99.99")).toBeInTheDocument();
+    expect(screen.getByText('Test Category')).toBeInTheDocument();
+    expect(screen.getByText('99.99')).toBeInTheDocument();
   });
 
-  it("redirects to login when adding to cart while logged out", async () => {
+  it('redirects to login when adding to cart while logged out', async () => {
     const mockPush = jest.fn();
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
     (useAuth as jest.Mock).mockReturnValue({ isLoggedIn: false });
 
     render(<ProductCard product={mockProduct} />);
 
-    const addButton = screen.getByRole("button", { name: /إضافة للسلة/i });
+    const addButton = screen.getByRole('button', { name: /إضافة للسلة/i });
     await userEvent.click(addButton);
 
-    expect(mockPush).toHaveBeenCalledWith(
-      expect.stringContaining("/login?redirect=/")
-    );
+    expect(mockPush).toHaveBeenCalledWith(expect.stringContaining('/login?redirect=/'));
   });
 
-  it("shows quantity controls when item is in cart", () => {
+  it('shows quantity controls when item is in cart', () => {
     (useCart as jest.Mock).mockReturnValue({
       cart: {
         cartItems: [
@@ -112,10 +110,10 @@ describe("ProductCard", () => {
     });
 
     render(<ProductCard product={mockProduct} />);
-    expect(screen.getByRole("spinbutton")).toHaveValue(2);
+    expect(screen.getByRole('spinbutton')).toHaveValue(2);
   });
 
-  it("handles image error correctly", () => {
+  it('handles image error correctly', () => {
     const mockHandleImageError = jest.fn();
     (useImageError as jest.Mock).mockReturnValue({
       handleImageError: mockHandleImageError,
@@ -123,7 +121,7 @@ describe("ProductCard", () => {
     });
 
     render(<ProductCard product={mockProduct} />);
-    const img = screen.getByRole("img");
+    const img = screen.getByRole('img');
     fireEvent.error(img);
 
     expect(mockHandleImageError).toHaveBeenCalled();

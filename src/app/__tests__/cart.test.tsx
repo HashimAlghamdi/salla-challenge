@@ -30,7 +30,7 @@ describe('Cart Page', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     (useAuth as jest.Mock).mockReturnValue({
       isLoggedIn: true,
     });
@@ -107,7 +107,7 @@ describe('Cart Page', () => {
     const quantityInput = screen.getByRole('spinbutton');
     await userEvent.clear(quantityInput);
     await userEvent.type(quantityInput, '3');
-    
+
     await waitFor(() => {
       expect(mockUpdateCartItem).toHaveBeenCalledWith(1, 1, 3);
     });
@@ -126,7 +126,7 @@ describe('Cart Page', () => {
     render(<Cart />);
     const deleteButton = screen.getByTitle('حذف');
     await userEvent.click(deleteButton);
-    
+
     expect(mockDeleteCartItem).toHaveBeenCalledWith(1);
   });
-}); 
+});
