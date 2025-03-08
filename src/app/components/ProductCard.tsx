@@ -16,7 +16,6 @@ const ProductCard = ({ product }: { product: Product }) => {
   const { categories } = useCategories();
   const { addToCart, cart, updateCartItem, deleteCartItem } = useCart();
   const [isLoading, setIsLoading] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
   const { isLoggedIn } = useAuth();
 
@@ -27,24 +26,6 @@ const ProductCard = ({ product }: { product: Product }) => {
   const cartItem = cart?.cartItems.find(
     (item) => item.product.id === product.id
   );
-
-  const handleAddToCart = async () => {
-    if (!isLoggedIn) {
-      router.push(
-        `/login?redirect=${encodeURIComponent("/")}&productId=${
-          product.id
-        }&quantity=1`
-      );
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      await addToCart(product.id, 1);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleUpdateQuantity = async (newQuantity: number) => {
     if (cartItem) {

@@ -1,8 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import QuantityControls from '../QuantityControls';
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import QuantityControls from "../QuantityControls";
 
-describe('QuantityControls', () => {
+describe("QuantityControls", () => {
   const mockOnUpdate = jest.fn();
   const mockOnDelete = jest.fn();
 
@@ -10,7 +10,7 @@ describe('QuantityControls', () => {
     jest.clearAllMocks();
   });
 
-  it('renders correctly with initial quantity', () => {
+  it("renders correctly with initial quantity", () => {
     render(
       <QuantityControls
         quantity={1}
@@ -19,11 +19,11 @@ describe('QuantityControls', () => {
       />
     );
 
-    expect(screen.getByRole('spinbutton')).toHaveValue(1);
-    expect(screen.getByTitle('حذف')).toBeInTheDocument();
+    expect(screen.getByRole("spinbutton")).toHaveValue(1);
+    expect(screen.getByTitle("حذف")).toBeInTheDocument();
   });
 
-  it('shows loader when loading', () => {
+  it("shows loader when loading", () => {
     render(
       <QuantityControls
         quantity={1}
@@ -33,11 +33,11 @@ describe('QuantityControls', () => {
       />
     );
 
-    expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
+    expect(screen.queryByRole("spinbutton")).not.toBeInTheDocument();
+    expect(screen.getByTestId("loader")).toBeInTheDocument();
   });
 
-  it('calls onUpdate when quantity is changed', async () => {
+  it("calls onUpdate when quantity is changed", async () => {
     render(
       <QuantityControls
         quantity={1}
@@ -46,17 +46,17 @@ describe('QuantityControls', () => {
       />
     );
 
-    const input = screen.getByRole('spinbutton');
+    const input = screen.getByRole("spinbutton");
     await userEvent.clear(input);
-    await userEvent.type(input, '5');
-    
+    await userEvent.type(input, "5");
+
     // Wait for debounce
     await new Promise((r) => setTimeout(r, 1000));
-    
+
     expect(mockOnUpdate).toHaveBeenCalledWith(5);
   });
 
-  it('calls onDelete when delete button is clicked', async () => {
+  it("calls onDelete when delete button is clicked", async () => {
     render(
       <QuantityControls
         quantity={1}
@@ -65,7 +65,7 @@ describe('QuantityControls', () => {
       />
     );
 
-    await userEvent.click(screen.getByTitle('حذف'));
+    await userEvent.click(screen.getByTitle("حذف"));
     expect(mockOnDelete).toHaveBeenCalled();
   });
-}); 
+});

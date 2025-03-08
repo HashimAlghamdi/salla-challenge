@@ -1,25 +1,24 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import Product from '../page';
-import { useProducts } from '@/contexts/ProductsContext';
-import { useCart } from '@/contexts/CartContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { render, screen } from "@testing-library/react";
+import Product from "../page";
+import { useProducts } from "@/contexts/ProductsContext";
+import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 
-jest.mock('@/contexts/ProductsContext');
-jest.mock('@/contexts/CartContext');
-jest.mock('@/contexts/AuthContext');
-jest.mock('next/navigation', () => ({
-  useParams: () => ({ id: '1' }),
+jest.mock("@/contexts/ProductsContext");
+jest.mock("@/contexts/CartContext");
+jest.mock("@/contexts/AuthContext");
+jest.mock("next/navigation", () => ({
+  useParams: () => ({ id: "1" }),
   useRouter: () => ({ push: jest.fn() }),
 }));
 
-describe('Product Page', () => {
+describe("Product Page", () => {
   const mockProduct = {
     id: 1,
-    name: 'Test Product',
-    description: 'Test Description',
+    name: "Test Product",
+    description: "Test Description",
     price: 99.99,
-    imageURL: 'test.jpg',
+    imageURL: "test.jpg",
     categoryId: 1,
   };
 
@@ -39,32 +38,34 @@ describe('Product Page', () => {
     });
   });
 
-  it('renders product details correctly', () => {
+  it("renders product details correctly", () => {
     render(<Product />);
-    expect(screen.getByText('Test Product')).toBeInTheDocument();
-    expect(screen.getByText('Test Description')).toBeInTheDocument();
-    expect(screen.getByText('99.99')).toBeInTheDocument();
+    expect(screen.getByText("Test Product")).toBeInTheDocument();
+    expect(screen.getByText("Test Description")).toBeInTheDocument();
+    expect(screen.getByText("99.99")).toBeInTheDocument();
   });
 
-  it('shows add to cart button when item is not in cart', () => {
+  it("shows add to cart button when item is not in cart", () => {
     render(<Product />);
-    expect(screen.getByText('إضافة للسلة')).toBeInTheDocument();
+    expect(screen.getByText("إضافة للسلة")).toBeInTheDocument();
   });
 
-  it('shows quantity controls when item is in cart', () => {
+  it("shows quantity controls when item is in cart", () => {
     (useCart as jest.Mock).mockReturnValue({
       cart: {
-        cartItems: [{
-          id: 1,
-          product: mockProduct,
-          quantity: 1,
-        }],
+        cartItems: [
+          {
+            id: 1,
+            product: mockProduct,
+            quantity: 1,
+          },
+        ],
       },
       updateCartItem: jest.fn(),
       deleteCartItem: jest.fn(),
     });
 
     render(<Product />);
-    expect(screen.getByRole('spinbutton')).toHaveValue(1);
+    expect(screen.getByRole("spinbutton")).toHaveValue(1);
   });
-}); 
+});
