@@ -11,7 +11,13 @@ import SaudiRiyal from "@/assets/images/saudi-riyal.svg";
 import QuantityControls from "../components/QuantityControls";
 
 const Cart = () => {
-  const { cart, isLoading: cartLoading, error, updateCartItem, deleteCartItem } = useCart();
+  const {
+    cart,
+    isLoading: cartLoading,
+    error,
+    updateCartItem,
+    deleteCartItem,
+  } = useCart();
   const { isLoggedIn } = useAuth();
   const [loadingItemId, setLoadingItemId] = useState<number | null>(null);
 
@@ -47,9 +53,12 @@ const Cart = () => {
       </div>
     );
   }
-console.log();
 
-  const handleUpdateQuantity = async (itemId: number, productId: number, quantity: number) => {
+  const handleUpdateQuantity = async (
+    itemId: number,
+    productId: number,
+    quantity: number
+  ) => {
     setLoadingItemId(itemId);
     try {
       await updateCartItem(itemId, productId, quantity);
@@ -106,7 +115,9 @@ console.log();
             <div className="flex items-center justify-center gap-4">
               <QuantityControls
                 quantity={item.quantity}
-                onUpdate={(value) => handleUpdateQuantity(item.id, item.product.id, value)}
+                onUpdate={(value) =>
+                  handleUpdateQuantity(item.id, item.product.id, value)
+                }
                 onDelete={() => handleDelete(item.id)}
                 isLoading={loadingItemId === item.id}
               />

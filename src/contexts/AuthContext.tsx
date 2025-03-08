@@ -29,7 +29,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const data = await authService.login({ email, password });
     localStorage.setItem("token", data.token);
     setIsLoggedIn(true);
-    console.log("login");
 
     await fetchCart(); // Fetch cart after successful login
   };
