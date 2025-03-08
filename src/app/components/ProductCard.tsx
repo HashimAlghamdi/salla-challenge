@@ -59,8 +59,8 @@ const ProductCard = ({ product }: { product: Product }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
-      <Link href={`/product/${product.id}`} className="flex flex-col gap-2">
+    <div className="flex flex-col h-full gap-4 p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
+      <Link href={`/product/${product.id}`} className="flex flex-col gap-2 flex-1">
         <div className="rounded-lg  flex flex-col items-start justify-start md:p-3 p-2 relative">
           <Link href={`/product/${product.id}`} className="block w-full relative mb-4">
             {product.imageURL !== '' && !hasImageError(product.id) ? (
@@ -104,7 +104,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
       </Link>
 
-      <div className="w-full px-2">
+      <div className="w-full px-2 mt-auto">
         {cartItem ? (
           <div className="w-full flex justify-center">
             <QuantityControls
@@ -118,7 +118,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           <button
             onClick={handleAddToCart}
             disabled={isLoading}
-            className="w-full bg-primary text-white p-2 text-md rounded-md disabled:opacity-50 flex items-center justify-center"
+            className="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors disabled:opacity-50"
           >
             {isLoading ? <Loader /> : 'إضافة للسلة'}
           </button>
