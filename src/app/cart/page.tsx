@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
@@ -11,10 +11,11 @@ import SaudiRiyal from "@/assets/images/saudi-riyal.svg";
 import QuantityControls from "../components/QuantityControls";
 
 const Cart = () => {
-  const { cart, isLoading, error, updateCartItem, deleteCartItem } = useCart();
+  const { cart, isLoading: cartLoading, error, updateCartItem, deleteCartItem } = useCart();
   const { isLoggedIn } = useAuth();
+  const [loadingItemId, setLoadingItemId] = useState<number | null>(null);
 
-  if (isLoading) {
+  if (cartLoading) {
     return <Loader className="w-1/4 h-[60vh]" />;
   }
 
@@ -47,6 +48,24 @@ const Cart = () => {
     );
   }
 console.log();
+
+  const handleUpdateQuantity = async (itemId: number, productId: number, quantity: number) => {
+    setLoadingItemId(itemId);
+    try {
+      await updateCartItem(itemId, productId, quantity);
+    } finally {
+      setLoadingItemId(null);
+    }
+  };
+
+  const handleDelete = async (itemId: number) => {
+    setLoadingItemId(itemId);
+    try {
+      await deleteCartItem(itemId);
+    } finally {
+      setLoadingItemId(null);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -87,17 +106,10 @@ console.log();
             <div className="flex items-center justify-center gap-4">
               <QuantityControls
                 quantity={item.quantity}
-                onUpdate={(value) =>
-                  updateCartItem(item.id, item.product.id, value)
-                }
-                isLoading={isLoading}
+                onUpdate={(value) => handleUpdateQuantity(item.id, item.product.id, value)}
+                onDelete={() => handleDelete(item.id)}
+                isLoading={loadingItemId === item.id}
               />
-              <button
-                onClick={() => deleteCartItem(item.id)}
-                className="w-[28px] h-[28px] flex items-center justify-center text-xs border border-red-500 text-red-500 rounded-full"
-              >
-                <i className="sicon-trash"></i>
-              </button>
             </div>
           </li>
         ))}

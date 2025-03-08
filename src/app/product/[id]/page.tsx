@@ -18,7 +18,6 @@ const Product = () => {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const product = products.find((product) => product.id === Number(id));
   const cartItem = cart?.cartItems.find(item => item.product.id === Number(id));
@@ -50,11 +49,11 @@ const Product = () => {
 
   const handleDelete = async () => {
     if (cartItem) {
-      setIsDeleting(true);
+      setIsLoading(true);
       try {
         await deleteCartItem(cartItem.id);
       } finally {
-        setIsDeleting(false);
+        setIsLoading(false);
       }
     }
   };
@@ -87,20 +86,12 @@ const Product = () => {
         </article>
         <div className="flex items-center justify-start gap-4">
           {cartItem ? (
-            <>
-              <QuantityControls
-                quantity={cartItem.quantity}
-                onUpdate={handleUpdateQuantity}
-                isLoading={isLoading}
-              />
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting || isLoading}
-                className="w-[42px] h-[42px] flex items-center justify-center text-sm border border-red-500 text-red-500 rounded-full disabled:opacity-50"
-              >
-                {isDeleting ? <Loader className="w-4 h-4" /> : <i className="sicon-trash"></i>}
-              </button>
-            </>
+            <QuantityControls
+              quantity={cartItem.quantity}
+              onUpdate={handleUpdateQuantity}
+              onDelete={handleDelete}
+              isLoading={isLoading}
+            />
           ) : (
             <button
               type="button"

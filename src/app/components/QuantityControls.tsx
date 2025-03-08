@@ -5,12 +5,14 @@ import Loader from "./Loader";
 interface QuantityControlsProps {
   quantity: number;
   onUpdate: (quantity: number) => void;
+  onDelete?: () => void;
   isLoading?: boolean;
 }
 
 const QuantityControls = ({
   quantity,
   onUpdate,
+  onDelete,
   isLoading,
 }: QuantityControlsProps) => {
   const [inputValue, setInputValue] = useState(quantity.toString());
@@ -26,20 +28,28 @@ const QuantityControls = ({
     [onUpdate]
   );
 
-  return (
-    <div className="flex items-center justify-center p-2 border border-gray-200 rounded-lg">
-      <button
-        onClick={() => onUpdate(quantity + 1)}
-        className="px-2 text-gray-500"
-        disabled={isLoading}
-      >
-        +
-      </button>
-      {isLoading ? (
-        <div className="w-[50px] flex items-center justify-center">
-          <Loader />
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center p-2 border border-gray-200 rounded-lg">
+          <div className="w-[120px] flex items-center justify-center">
+            <Loader />
+          </div>
         </div>
-      ) : (
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex items-center justify-center p-2 border border-gray-200 rounded-lg">
+        <button
+          onClick={() => onUpdate(quantity + 1)}
+          className="px-2 text-gray-500"
+          disabled={isLoading}
+        >
+          +
+        </button>
         <input
           type="number"
           value={inputValue}
@@ -61,14 +71,23 @@ const QuantityControls = ({
           }}
           className="w-[50px] text-center appearance-none bg-transparent"
         />
+        <button
+          onClick={() => onUpdate(quantity - 1)}
+          className="px-2 text-gray-500"
+          disabled={isLoading || quantity <= 1}
+        >
+          -
+        </button>
+      </div>
+      {onDelete && (
+        <button
+          onClick={onDelete}
+          disabled={isLoading}
+          className="w-[42px] h-[42px] flex items-center justify-center text-sm border border-red-500 text-red-500 rounded-full disabled:opacity-50"
+        >
+          <i className="sicon-trash text-lg" />
+        </button>
       )}
-      <button
-        onClick={() => onUpdate(quantity - 1)}
-        className="px-2 text-gray-500"
-        disabled={isLoading || quantity <= 1}
-      >
-        -
-      </button>
     </div>
   );
 };

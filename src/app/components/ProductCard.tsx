@@ -60,11 +60,11 @@ const ProductCard = ({ product }: { product: Product }) => {
 
   const handleDelete = async () => {
     if (cartItem) {
-      setIsDeleting(true);
+      setIsLoading(true);
       try {
         await deleteCartItem(cartItem.id);
       } finally {
-        setIsDeleting(false);
+        setIsLoading(false);
       }
     }
   };
@@ -124,35 +124,12 @@ const ProductCard = ({ product }: { product: Product }) => {
         <Image src={SaudiRiyal} alt="Saudi Riyal" width={16} height={16} />
       </div>
 
-      {cartItem ? (
-        <div className="flex items-center justify-center gap-4 w-full">
-          <QuantityControls
-            quantity={cartItem.quantity}
-            onUpdate={handleUpdateQuantity}
-            isLoading={isLoading}
-          />
-          <button
-            onClick={handleDelete}
-            disabled={isDeleting || isLoading}
-            className="w-[28px] h-[28px] flex items-center justify-center text-xs border border-red-500 text-red-500 rounded-full disabled:opacity-50"
-          >
-            {isDeleting ? (
-              <Loader className="w-3 h-3" />
-            ) : (
-              <i className="sicon-trash"></i>
-            )}
-          </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={handleAddToCart}
-          disabled={isLoading}
-          className="w-full bg-primary text-white p-2 text-md rounded-md disabled:opacity-50 flex items-center justify-center"
-        >
-          {isLoading ? <Loader /> : "إضافة للسلة"}
-        </button>
-      )}
+      <QuantityControls
+        quantity={cartItem?.quantity || 0}
+        onUpdate={handleUpdateQuantity}
+        onDelete={handleDelete}
+        isLoading={isLoading}
+      />
     </div>
   );
 };
