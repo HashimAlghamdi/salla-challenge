@@ -8,7 +8,6 @@ import Image from "next/image";
 import { useCategories } from "@/contexts/CategoriesContext";
 import { useCart } from "@/contexts/CartContext";
 import QuantityControls from "./QuantityControls";
-import Loader from "./Loader";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -124,12 +123,14 @@ const ProductCard = ({ product }: { product: Product }) => {
         <Image src={SaudiRiyal} alt="Saudi Riyal" width={16} height={16} />
       </div>
 
-      <QuantityControls
-        quantity={cartItem?.quantity || 0}
-        onUpdate={handleUpdateQuantity}
-        onDelete={handleDelete}
-        isLoading={isLoading}
-      />
+      <div className="w-full flex justify-center">
+        <QuantityControls
+          quantity={cartItem?.quantity || 0}
+          onUpdate={handleUpdateQuantity}
+          onDelete={handleDelete}
+          isLoading={isLoading}
+        />
+      </div>
     </div>
   );
 };
