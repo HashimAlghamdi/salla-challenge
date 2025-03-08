@@ -9,11 +9,12 @@ import { useCategories } from '@/contexts/CategoriesContext';
 import { useCart } from '@/contexts/CartContext';
 import QuantityControls from './QuantityControls';
 import { useRouter } from 'next/navigation';
+import Loader from './Loader';
 
 const ProductCard = ({ product }: { product: Product }) => {
   const { handleImageError, hasImageError } = useImageError();
   const { categories } = useCategories();
-  const { cart, updateCartItem, deleteCartItem } = useCart();
+  const { cart, updateCartItem, deleteCartItem, addToCart } = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -43,60 +44,85 @@ const ProductCard = ({ product }: { product: Product }) => {
     }
   };
 
+  const handleAddToCart = async () => {
+    setIsLoading(true);
+    try {
+      await addToCart(product.id, 1);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleCategoryClick = (e: React.MouseEvent, categoryId: number) => {
     e.preventDefault(); // Prevent link navigation
     router.push(`/?category=${categoryId}`);
   };
 
   return (
-    <div className="rounded-lg border-2 border-gray-50 flex flex-col items-start justify-start md:p-3 p-2 relative">
-      <Link href={`/product/${product.id}`} className="block w-full relative mb-4">
-        {product.imageURL !== '' && !hasImageError(product.id) ? (
-          <img
-            src={product.imageURL}
-            alt={product.name}
-            className="w-full h-48 object-cover rounded-lg"
-            onError={() => handleImageError(product.id)}
-          />
-        ) : (
-          <div className="w-full h-48 flex items-center justify-center">
-            <ImagePlaceholderComponent productTitle={product.name} showTitle={false} />
+    <div className="flex flex-col gap-4 p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
+      <Link href={`/product/${product.id}`} className="flex flex-col gap-2">
+        <div className="rounded-lg  flex flex-col items-start justify-start md:p-3 p-2 relative">
+          <Link href={`/product/${product.id}`} className="block w-full relative mb-4">
+            {product.imageURL !== '' && !hasImageError(product.id) ? (
+              <img
+                src={product.imageURL}
+                alt={product.name}
+                className="w-full h-48 object-cover rounded-lg"
+                onError={() => handleImageError(product.id)}
+              />
+            ) : (
+              <div className="w-full h-48 flex items-center justify-center">
+                <ImagePlaceholderComponent productTitle={product.name} showTitle={false} />
+              </div>
+            )}
+          </Link>
+          <div className="w-full flex flex-col flex-1 items-center justify-start gap-4">
+            <div className="flex items-center justify-center flex-col gap-1 w-full">
+              <a href="#" className="block w-full text-primary text-center">
+                <h2 className="text-sm">{product.name}</h2>
+              </a>
+              <small className="block text-xs w-full text-center">{product.description}</small>
+            </div>
+            <div className="flex items-center justify-center flex-wrap gap-2 text-gray-300 w-full">
+              <span
+                onClick={e => category && handleCategoryClick(e, category.id)}
+                className="text-xs text-gray-500 underline cursor-pointer hover:text-primary transition-colors"
+              >
+                {category?.categoryName}
+              </span>
+            </div>
           </div>
-        )}
+          <div className="flex flex-col sm:flex-row items-center justify-center w-full my-4 gap-1">
+            <span className="font-medium text-md">
+              {product.price.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}{' '}
+            </span>
+            <Image src={SaudiRiyal} alt="Saudi Riyal" width={16} height={16} />
+          </div>
+        </div>
       </Link>
-      <div className="w-full flex flex-col flex-1 items-center justify-start gap-4">
-        <div className="flex items-center justify-center flex-col gap-1 w-full">
-          <a href="#" className="block w-full text-primary text-center">
-            <h2 className="text-sm">{product.name}</h2>
-          </a>
-          <small className="block text-xs w-full text-center">{product.description}</small>
-        </div>
-        <div className="flex items-center justify-center flex-wrap gap-2 text-gray-300 w-full">
-          <span
-            onClick={e => category && handleCategoryClick(e, category.id)}
-            className="text-xs text-gray-500 underline cursor-pointer hover:text-primary transition-colors"
-          >
-            {category?.categoryName}
-          </span>
-        </div>
-      </div>
-      <div className="flex flex-col sm:flex-row items-center justify-center w-full my-4 gap-1">
-        <span className="font-medium text-md">
-          {product.price.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}{' '}
-        </span>
-        <Image src={SaudiRiyal} alt="Saudi Riyal" width={16} height={16} />
-      </div>
 
-      <div className="w-full flex justify-center">
-        <QuantityControls
-          quantity={cartItem?.quantity || 0}
-          onUpdate={handleUpdateQuantity}
-          onDelete={handleDelete}
-          isLoading={isLoading}
-        />
+      <div className="w-full px-2">
+        {cartItem ? (
+          <div className="w-full flex justify-center">
+            <QuantityControls
+              quantity={cartItem.quantity}
+              onUpdate={handleUpdateQuantity}
+              onDelete={handleDelete}
+              isLoading={isLoading}
+            />
+          </div>
+        ) : (
+          <button
+            onClick={handleAddToCart}
+            disabled={isLoading}
+            className="w-full bg-primary text-white p-2 text-md rounded-md disabled:opacity-50 flex items-center justify-center"
+          >
+            {isLoading ? <Loader /> : 'إضافة للسلة'}
+          </button>
+        )}
       </div>
     </div>
   );

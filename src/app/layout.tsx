@@ -1,8 +1,7 @@
-import "../styles/globals.scss";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { ContextProvider } from "@/app/providers/ContextProvider";
-
+import '../styles/globals.scss';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import { ContextProvider } from '@/app/providers/ContextProvider';
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,14 +35,8 @@ export default function RootLayout({
         <meta name="msapplication-navbutton-color" content="#BAF3E6" />
         <meta name="apple-mobile-web-app-status-bar-style" content="#BAF3E6" />
 
-        <link
-          rel="stylesheet"
-          href="https://cdn.salla.network/fonts/pingarlt.css?v=1.0"
-        />
-        <link
-          rel="stylesheet"
-          href="https://cdn.salla.network/fonts/sallaicons.css"
-        />
+        <link rel="stylesheet" href="https://cdn.salla.network/fonts/pingarlt.css?v=1.0" />
+        <link rel="stylesheet" href="https://cdn.salla.network/fonts/sallaicons.css" />
         <link rel="stylesheet" href="./app.css" />
         <title>متجر تجريبي</title>
       </head>
@@ -53,9 +46,7 @@ export default function RootLayout({
           <Header />
           <main className="w-full main flex-auto">
             <div className="container">
-              <div className="p-2 sm:p-4 bg-white rounded-lg shadow-4xl">
-                {children}
-              </div>
+              <div className="p-2 sm:p-4 bg-white rounded-lg shadow-4xl">{children}</div>
             </div>
           </main>
           <Footer />
