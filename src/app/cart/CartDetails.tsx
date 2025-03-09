@@ -9,7 +9,7 @@ import SaudiRiyal from '@/assets/images/saudi-riyal.svg';
 import QuantityControls from '@/app/components/QuantityControls';
 import { useImageError } from '@/hooks/useImageError';
 import ImagePlaceholderComponent from '@/app/components/ImagePlaceholderComponent';
-
+import { formatPrice } from '@/app/utils/formatPrice';
 interface CartDetailsProps {
   initialData: Cart | null;
 }
@@ -84,7 +84,7 @@ const CartDetails = ({ initialData }: CartDetailsProps) => {
                 </Link>
 
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xl">{item.product.price}</span>
+                  <span className="text-xl">{formatPrice(item.product.price)}</span>
                   <Image src={SaudiRiyal} alt="SAR" width={16} height={16} />
                 </div>
               </div>
@@ -115,7 +115,7 @@ const CartDetails = ({ initialData }: CartDetailsProps) => {
           <div className="flex justify-between items-center text-lg font-bold">
             <span>المجموع</span>
             <div className="flex items-center gap-2">
-              <span>{totalPrice}</span>
+              <span>{formatPrice(totalPrice)}</span>
               <Image src={SaudiRiyal} alt="SAR" width={16} height={16} />
             </div>
           </div>

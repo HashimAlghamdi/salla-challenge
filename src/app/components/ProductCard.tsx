@@ -10,6 +10,7 @@ import { useCart } from '@/contexts/CartContext';
 import QuantityControls from './QuantityControls';
 import { useRouter } from 'next/navigation';
 import Loader from './Loader';
+import { formatPrice } from '@/app/utils/formatPrice';
 
 const ProductCard = ({ product }: { product: Product }) => {
   const { handleImageError, hasImageError } = useImageError();
@@ -93,13 +94,10 @@ const ProductCard = ({ product }: { product: Product }) => {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center w-full my-4 gap-1">
-            <span className="font-medium text-md">
-              {product.price.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}{' '}
-            </span>
-            <Image src={SaudiRiyal} alt="Saudi Riyal" width={16} height={16} />
+            <div className="flex items-center gap-2">
+              <span className="text-xl">{formatPrice(product.price)}</span>
+              <Image src={SaudiRiyal} alt="SAR" width={16} height={16} />
+            </div>
           </div>
         </div>
       </Link>

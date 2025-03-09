@@ -9,6 +9,7 @@ import Image from 'next/image';
 import QuantityControls from '@/app/components/QuantityControls';
 import Loader from '@/app/components/Loader';
 import { useAuth } from '@/contexts/AuthContext';
+import { formatPrice } from '@/app/utils/formatPrice';
 
 const Product = () => {
   const { products } = useProducts();
@@ -76,12 +77,7 @@ const Product = () => {
             </small>
           </div>
           <div className="flex flex-col sm:flex-row w-full my-4 gap-0 sm:gap-2">
-            <span className="font-medium text-md">
-              {product?.price.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}{' '}
-            </span>
+            <span className="font-medium text-md">{formatPrice(product?.price ?? 0)}</span>
             <Image src={SaudiRiyal} alt="Saudi Riyal" width={16} height={16} />
           </div>
           <p>{product?.description}</p>
