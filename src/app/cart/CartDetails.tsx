@@ -10,6 +10,7 @@ import QuantityControls from '@/app/components/QuantityControls';
 import { useImageError } from '@/hooks/useImageError';
 import ImagePlaceholderComponent from '@/app/components/ImagePlaceholderComponent';
 import { formatPrice } from '@/app/utils/formatPrice';
+
 interface CartDetailsProps {
   initialData: Cart | null;
 }
@@ -19,7 +20,6 @@ const CartDetails = ({ initialData }: CartDetailsProps) => {
   const [loadingItemId, setLoadingItemId] = useState<number | null>(null);
   const { handleImageError, hasImageError } = useImageError();
 
-  // Use cart from context instead of initialData for real-time updates
   const currentCart = cart || initialData;
   const cartItems = currentCart?.cartItems ?? [];
 
@@ -64,7 +64,7 @@ const CartDetails = ({ initialData }: CartDetailsProps) => {
             <div key={item.id} className="flex items-center gap-4 border-b py-4 last:border-0">
               <div className="w-24 h-24 relative">
                 {hasImageError(item.product.id) ? (
-                  <ImagePlaceholderComponent />
+                  <ImagePlaceholderComponent productTitle={item.product.name} showTitle={false} />
                 ) : (
                   <img
                     src={item.product.imageURL}
@@ -84,22 +84,17 @@ const CartDetails = ({ initialData }: CartDetailsProps) => {
                 </Link>
 
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xl">{formatPrice(item.product.price)}</span>
+                  <span>{formatPrice(item.product.price)}</span>
                   <Image src={SaudiRiyal} alt="SAR" width={16} height={16} />
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
-                {loadingItemId === item.id ? (
-                  <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <QuantityControls
-                    quantity={item.quantity}
-                    onUpdate={quantity => handleUpdateQuantity(item.id, item.product.id, quantity)}
-                    onDelete={() => handleDelete(item.id)}
-                  />
-                )}
-              </div>
+              <QuantityControls
+                quantity={item.quantity}
+                onUpdate={quantity => handleUpdateQuantity(item.id, item.product.id, quantity)}
+                onDelete={() => handleDelete(item.id)}
+                isLoading={loadingItemId === item.id}
+              />
             </div>
           ))}
         </div>
