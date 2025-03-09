@@ -1,14 +1,14 @@
-"use client";
-import { useCategories } from "@/contexts/CategoriesContext";
-import { useProducts } from "@/contexts/ProductsContext";
-import { useCart } from "@/contexts/CartContext";
-import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
-import SaudiRiyal from "@/assets/images/saudi-riyal.svg";
-import Image from "next/image";
-import QuantityControls from "@/app/components/QuantityControls";
-import Loader from "@/app/components/Loader";
-import { useAuth } from "@/contexts/AuthContext";
+'use client';
+import { useCategories } from '@/contexts/CategoriesContext';
+import { useProducts } from '@/contexts/ProductsContext';
+import { useCart } from '@/contexts/CartContext';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import SaudiRiyal from '@/assets/images/saudi-riyal.svg';
+import Image from 'next/image';
+import QuantityControls from '@/app/components/QuantityControls';
+import Loader from '@/app/components/Loader';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Product = () => {
   const { products } = useProducts();
@@ -19,12 +19,14 @@ const Product = () => {
   const { isLoggedIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const product = products.find((product) => product.id === Number(id));
+  const product = products.find(product => product.id === Number(id));
   const cartItem = cart?.cartItems.find(item => item.product.id === Number(id));
 
   const handleAddToCart = async () => {
     if (!isLoggedIn) {
-      router.push(`/login?redirect=${encodeURIComponent(`/product/${id}`)}&productId=${id}&quantity=1`);
+      router.push(
+        `/login?redirect=${encodeURIComponent(`/product/${id}`)}&productId=${id}&quantity=1`
+      );
       return;
     }
 
@@ -70,15 +72,15 @@ const Product = () => {
           <div className="flex flex-col mb-6 gap-2">
             <h1 className="text-xl md:text-3xl">{product?.name}</h1>
             <small className="text-xs text-gray-500">
-              {categories.find((category) => category.id === product?.categoryId)?.categoryName}
+              {categories.find(category => category.id === product?.categoryId)?.categoryName}
             </small>
           </div>
           <div className="flex flex-col sm:flex-row w-full my-4 gap-0 sm:gap-2">
             <span className="font-medium text-md">
-              {product?.price.toLocaleString("en-US", {
+              {product?.price.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
-              })}{" "}
+              })}{' '}
             </span>
             <Image src={SaudiRiyal} alt="Saudi Riyal" width={16} height={16} />
           </div>
@@ -99,7 +101,7 @@ const Product = () => {
               disabled={isLoading}
               className="w-full h-[42px] bg-primary text-white p-2 text-md rounded-md disabled:opacity-50 flex items-center justify-center"
             >
-              {isLoading ? <Loader /> : "إضافة للسلة"}
+              {isLoading ? <Loader /> : 'إضافة للسلة'}
             </button>
           )}
         </div>

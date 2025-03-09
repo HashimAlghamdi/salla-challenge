@@ -62,7 +62,7 @@ const ProductCard = ({ product }: { product: Product }) => {
     <div className="flex flex-col h-full gap-4 p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
       <Link href={`/product/${product.id}`} className="flex flex-col gap-2 flex-1">
         <div className="rounded-lg  flex flex-col items-start justify-start md:p-3 p-2 relative">
-          <Link href={`/product/${product.id}`} className="block w-full relative mb-4">
+          <div className="block w-full relative mb-4">
             {product.imageURL !== '' && !hasImageError(product.id) ? (
               <img
                 src={product.imageURL}
@@ -75,12 +75,12 @@ const ProductCard = ({ product }: { product: Product }) => {
                 <ImagePlaceholderComponent productTitle={product.name} showTitle={false} />
               </div>
             )}
-          </Link>
+          </div>
           <div className="w-full flex flex-col flex-1 items-center justify-start gap-4">
             <div className="flex items-center justify-center flex-col gap-1 w-full">
-              <a href="#" className="block w-full text-primary text-center">
+              <div className="block w-full text-primary text-center">
                 <h2 className="text-sm">{product.name}</h2>
-              </a>
+              </div>
               <small className="block text-xs w-full text-center">{product.description}</small>
             </div>
             <div className="flex items-center justify-center flex-wrap gap-2 text-gray-300 w-full">

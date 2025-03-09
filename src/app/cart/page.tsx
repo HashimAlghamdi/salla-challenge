@@ -1,147 +1,51 @@
-"use client";
-import React, { useState } from "react";
-import { useCart } from "@/contexts/CartContext";
-import { useAuth } from "@/contexts/AuthContext";
-import Image from "next/image";
-import Link from "next/link";
-import Loader from "../components/Loader";
-import ErrorMessage from "../components/ErrorMessage";
-import SaudiRiyal from "@/assets/images/saudi-riyal.svg";
+import { Suspense } from 'react';
+import { fetchWithAuth } from '@/app/utils/serverFetch';
+import { Cart } from '@/interfaces/Cart';
+import { Metadata } from 'next';
+import CartDetails from './CartDetails';
+import Loader from '@/app/components/Loader';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import QuantityControls from "../components/QuantityControls";
-
-const Cart = () => {
-  const {
-    cart,
-    isLoading: cartLoading,
-    error,
-    updateCartItem,
-    deleteCartItem,
-  } = useCart();
-  const { isLoggedIn } = useAuth();
-  const [loadingItemId, setLoadingItemId] = useState<number | null>(null);
-
-  if (cartLoading) {
-    return <Loader className="w-1/4 h-[60vh]" />;
-  }
-
-  if (error) {
-    return <ErrorMessage error={error} />;
-  }
-
-  if (!isLoggedIn) {
-    return (
-      <div className="text-center py-8">
-        <h2 className="text-xl mb-4">يرجى تسجيل الدخول لعرض السلة</h2>
-        <Link
-          href={`/login?redirect=${encodeURIComponent("/cart")}`}
-          className="text-primary hover:underline"
-        >
-          تسجيل الدخول
-        </Link>
-      </div>
-    );
-  }
-
-  if (!cart || cart.cartItems.length === 0) {
-    return (
-      <div className="text-center py-8">
-        <h2 className="text-xl mb-4">السلة فارغة</h2>
-        <Link href="/" className="text-primary hover:underline">
-          تصفح المنتجات
-        </Link>
-      </div>
-    );
-  }
-
-  const handleUpdateQuantity = async (
-    itemId: number,
-    productId: number,
-    quantity: number
-  ) => {
-    setLoadingItemId(itemId);
-    try {
-      await updateCartItem(itemId, productId, quantity);
-    } finally {
-      setLoadingItemId(null);
-    }
-  };
-
-  const handleDelete = async (itemId: number) => {
-    setLoadingItemId(itemId);
-    try {
-      await deleteCartItem(itemId);
-    } finally {
-      setLoadingItemId(null);
-    }
-  };
-
-  return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-lg">سلة المشتريات</h2>
-      <ul className="flex flex-col gap-4">
-        {cart.cartItems.map((item) => (
-          <li
-            key={item.id}
-            className="flex items-start sm:items-center flex-col sm:flex-row justify-between gap-4 w-full p-4 rounded-md hover:bg-gray-50"
-          >
-            <Link
-              href={`/product/${item.product.id}`}
-              className="flex items-start justify-center gap-4 flex-1"
-            >
-              <img
-                src={item.product.imageURL}
-                alt={item.product.name}
-                className="rounded-md w-[80px] h-[80px] object-cover"
-              />
-              <div className="flex flex-col flex-1 gap-1">
-                <h4>{item.product.name}</h4>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">
-                    {item.product.price.toLocaleString("en-US", {
-                      minimumFractionDigits: 2,
-                    })}
-                    <Image
-                      src={SaudiRiyal}
-                      alt="Saudi Riyal"
-                      width={12}
-                      height={12}
-                      className="inline mx-1"
-                    />
-                  </span>
-                </div>
-              </div>
-            </Link>
-            <div className="flex items-center justify-center gap-4">
-              <QuantityControls
-                quantity={item.quantity}
-                onUpdate={(value) =>
-                  handleUpdateQuantity(item.id, item.product.id, value)
-                }
-                onDelete={() => handleDelete(item.id)}
-                isLoading={loadingItemId === item.id}
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
-      <div className="flex justify-between items-center p-4 border-t">
-        <span className="text-lg font-medium">المجموع:</span>
-        <span className="text-lg">
-          {cart.totalCost.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-          })}
-          <Image
-            src={SaudiRiyal}
-            alt="Saudi Riyal"
-            width={16}
-            height={16}
-            className="inline mx-1"
-          />
-        </span>
-      </div>
-    </div>
-  );
+export const metadata: Metadata = {
+  title: 'سلة المشتريات | متجر تجريبي',
+  description: 'عرض وإدارة سلة المشتريات الخاصة بك',
 };
 
-export default Cart;
+async function getCartData() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('auth_token');
+
+  if (!token) {
+    redirect('/login?redirect=/cart');
+  }
+
+  try {
+    const cart = await fetchWithAuth<Cart>('/cart/');
+    return { cart, error: null };
+  } catch (error) {
+    console.error('Error fetching cart:', error);
+    return {
+      cart: null,
+      error: 'Failed to load cart. Please try again later.',
+    };
+  }
+}
+
+export default async function CartPage() {
+  const { cart, error } = await getCartData();
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <Suspense fallback={<Loader className="w-1/3 h-[60vh]" />}>
+      <CartDetails initialData={cart} />
+    </Suspense>
+  );
+}

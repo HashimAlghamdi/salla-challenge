@@ -1,9 +1,9 @@
-import { apiClient } from "@/utils/client";
-import { Product } from "@/interfaces/Product";
+import { apiClient } from '@/app/utils/client';
+import { Product } from '@/interfaces/Product';
 
 export const productsService = {
   getProducts: async (): Promise<Product[]> => {
-    const response = await apiClient.get<Product[]>("/product/");
+    const response = await apiClient.get<Product[]>('/product/');
     return response.data;
   },
 };

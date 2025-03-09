@@ -1,10 +1,10 @@
-"use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { Cart, CartContextType } from "@/interfaces/Cart";
+'use client';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Cart, CartContextType } from '@/interfaces/Cart';
 
-import { useAuth } from "./AuthContext";
-import { cartService } from "@/services/cart.service";
-import { ApiError } from "@/interfaces/ApiError";
+import { useAuth } from './AuthContext';
+import { cartService } from '@/services/cart.service';
+import { ApiError } from '@/interfaces/ApiError';
 
 const CartContext = createContext<CartContextType>({
   cart: null,
@@ -26,20 +26,25 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (isLoggedIn) {
       fetchCart();
+    } else {
+      setCart(null);
     }
   }, [isLoggedIn]);
 
   const fetchCart = async () => {
+    if (!isLoggedIn) return;
+
     try {
       setIsLoading(true);
       setError(null);
       const data = await cartService.getCart();
       setCart(data);
     } catch (err) {
+      console.error('Error fetching cart:', err);
       setError(
-        err instanceof Error && "response" in err
+        err instanceof Error && 'response' in err
           ? (err as ApiError).response.data
-          : "حدث خطأ أثناء تحميل السلة"
+          : 'حدث خطأ أثناء تحميل السلة'
       );
       setCart(null);
     } finally {
@@ -60,35 +65,29 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       await cartService.addToCart({ productId, quantity });
       await fetchCart();
     } catch (err) {
+      console.error('Error adding to cart:', err);
       setError(
-        err instanceof Error && "response" in err
+        err instanceof Error && 'response' in err
           ? (err as ApiError).response.data
-          : "حدث خطأ أثناء الإضافة إلى السلة"
+          : 'حدث خطأ أثناء الإضافة إلى السلة'
       );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateCartItem = async (
-    itemId: number,
-    productId: number,
-    quantity: number
-  ) => {
+  const updateCartItem = async (itemId: number, productId: number, quantity: number) => {
     try {
       setIsLoading(true);
       setError(null);
-      await cartService.updateCartItem(itemId, {
-        id: itemId,
-        productId,
-        quantity,
-      });
+      await cartService.updateCartItem(itemId, { id: itemId, productId, quantity });
       await fetchCart();
     } catch (err) {
+      console.error('Error updating cart item:', err);
       setError(
-        err instanceof Error && "response" in err
+        err instanceof Error && 'response' in err
           ? (err as ApiError).response.data
-          : "حدث خطأ أثناء تحديث السلة"
+          : 'حدث خطأ أثناء تحديث السلة'
       );
     } finally {
       setIsLoading(false);
@@ -100,12 +99,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setIsLoading(true);
       setError(null);
       await cartService.deleteCartItem(itemId);
-      await fetchCart(); // Refresh cart after deletion
+      await fetchCart();
     } catch (err) {
+      console.error('Error deleting cart item:', err);
       setError(
-        err instanceof Error && "response" in err
+        err instanceof Error && 'response' in err
           ? (err as ApiError).response.data
-          : "حدث خطأ أثناء حذف المنتج"
+          : 'حدث خطأ أثناء حذف المنتج'
       );
     } finally {
       setIsLoading(false);
@@ -130,4 +130,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useCart = () => useContext(CartContext);
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
+};

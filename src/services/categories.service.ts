@@ -1,9 +1,9 @@
-import { apiClient } from "@/utils/client";
-import { Category } from "@/interfaces/Category";
+import { apiClient } from '@/app/utils/client';
+import { Category } from '@/interfaces/Category';
 
 export const categoriesService = {
   getCategories: async (): Promise<Category[]> => {
-    const response = await apiClient.get<Category[]>("/category/");
+    const response = await apiClient.get<Category[]>('/category/');
     return response.data;
   },
 };

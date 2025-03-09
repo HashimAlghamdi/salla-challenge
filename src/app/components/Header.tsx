@@ -1,21 +1,19 @@
-"use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
-import { useCart } from "@/contexts/CartContext";
+'use client';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
 
 const Header = () => {
   const router = useRouter();
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
-  const { cart, resetCart } = useCart();
+  const { isLoggedIn, logout } = useAuth();
+  const { cart } = useCart();
 
-  const cartItemsCount = cart?.cartItems.length || 0;
+  const cartItemsCount = cart?.cartItems?.length ?? 0;
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    resetCart();
-    router.push("/");
+    logout();
+    router.push('/');
   };
 
   return (
@@ -28,16 +26,11 @@ const Header = () => {
                 href="/"
                 className="block w-[80px] h-[80px] bg-gray-50 p-2 rounded-full border-4 border-secondary-50"
               >
-                <img
-                  src="https://cdn.salla.network/images/logo/logo-square.png"
-                  alt="Logo"
-                />
+                <img src="https://cdn.salla.network/images/logo/logo-square.png" alt="Logo" />
               </Link>
               <div className="flex flex-col">
                 <h1 className="text-xl">متجر التجربة الجميلة</h1>
-                <small className="text-gray-400">
-                  متجرك لكل تجاربك وأفكارك الجميلة
-                </small>
+                <small className="text-gray-400">متجرك لكل تجاربك وأفكارك الجميلة</small>
               </div>
             </div>
 
@@ -66,7 +59,6 @@ const Header = () => {
                 <>
                   <Link
                     href="/login"
-                    type="button"
                     className="w-[40px] h-[40px] rounded-full text-center flex items-center justify-center bg-secondary-50 text-primary"
                   >
                     <i className="sicon-user"></i>
