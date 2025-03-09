@@ -12,13 +12,14 @@ import QuantityControls from './QuantityControls';
 import { useRouter } from 'next/navigation';
 import Loader from './Loader';
 import { formatPrice } from '@/app/utils/formatPrice';
-
+import { useAuth } from '@/contexts/AuthContext';
 const ProductCard = ({ product }: { product: Product }) => {
   const { handleImageError, hasImageError } = useImageError();
   const { categories } = useCategories();
   const { cart, updateCartItem, deleteCartItem, addToCart } = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
 
   const category = categories.find(category => category.id === product.categoryId);
 
@@ -47,11 +48,16 @@ const ProductCard = ({ product }: { product: Product }) => {
   };
 
   const handleAddToCart = async () => {
-    setIsLoading(true);
-    try {
-      await addToCart(product.id, 1);
-    } finally {
-      setIsLoading(false);
+    if (!isLoggedIn) {
+      router.push(`/login?redirect=/product/${product.id}&productId=${product.id}&quantity=1`);
+      return;
+    } else {
+      setIsLoading(true);
+      try {
+        await addToCart(product.id, 1);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
