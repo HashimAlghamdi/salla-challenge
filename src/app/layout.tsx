@@ -2,13 +2,53 @@ import '../styles/globals.scss';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { ContextProvider } from '@/app/providers/ContextProvider';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | متجر التجربة الجميلة',
+    default: 'متجر التجربة الجميلة',
+  },
+  description: 'متجرك لكل تجاربك وأفكارك الجميلة',
+  keywords: ['متجر', 'تسوق', 'منتجات', 'أونلاين', 'تجارة إلكترونية'],
+  authors: [{ name: 'متجر التجربة الجميلة' }],
+  creator: 'متجر التجربة الجميلة',
+  publisher: 'متجر التجربة الجميلة',
+  robots: 'index, follow',
+  openGraph: {
+    type: 'website',
+    locale: 'ar_SA',
+    url: 'https://salla-challenge-delta.vercel.app/',
+    siteName: 'متجر التجربة الجميلة',
+    title: 'متجر التجربة الجميلة',
+    description: 'متجرك لكل تجاربك وأفكارك الجميلة',
+    images: [
+      {
+        url: 'https://cdn.salla.network/images/logo/logo-square.png',
+        width: 800,
+        height: 600,
+        alt: 'متجر التجربة الجميلة',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'متجر التجربة الجميلة',
+    description: 'متجرك لكل تجاربك وأفكارك الجميلة',
+    images: ['https://cdn.salla.network/images/logo/logo-square.png'],
+  },
+  viewport: 'width=device-width, initial-scale=1',
+  themeColor: '#ffffff',
+  manifest: '/manifest.json',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="rtl">
+    <html lang="ar" dir="rtl">
       <head>
         <meta charSet="UTF-8" />
         <meta

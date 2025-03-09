@@ -8,8 +8,14 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'سلة المشتريات | متجر تجريبي',
+  title: 'سلة المشتريات',
   description: 'عرض وإدارة سلة المشتريات الخاصة بك',
+  robots: 'noindex, nofollow',
+  openGraph: {
+    title: 'سلة المشتريات | متجر التجربة الجميلة',
+    description: 'عرض وإدارة سلة المشتريات الخاصة بك',
+    type: 'website',
+  },
 };
 
 async function getCartData() {
