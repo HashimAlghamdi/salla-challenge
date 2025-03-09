@@ -21,6 +21,8 @@ const ClientHomePage = ({
   const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = 8;
   const catalogRef = useRef<HTMLDivElement>(null);
+  const [carouselProducts, setCarouselProducts] = useState<Product[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   // Read URL params when component mounts or URL changes
   useEffect(() => {
@@ -88,6 +90,28 @@ const ClientHomePage = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loadMore]);
 
+  // Load first 5 products
+  useEffect(() => {
+    const initial = initialData.products.slice(0, 5);
+    setCarouselProducts(initial);
+  }, [initialData.products]);
+
+  // Load next 5 products
+  const loadNextProducts = () => {
+    const nextProducts = initialData.products.slice(currentIndex + 5, currentIndex + 10);
+    if (nextProducts.length > 0) {
+      setCarouselProducts(prev => [...prev, ...nextProducts]);
+      setCurrentIndex(prev => prev + 5);
+    }
+  };
+
+  // Handle when carousel reaches end
+  const handleSlideChange = (isEnd: boolean) => {
+    if (isEnd && currentIndex + 5 < initialData.products.length) {
+      loadNextProducts();
+    }
+  };
+
   if (isLoading) {
     return <Loader className="w-1/3 h-[60vh]" />;
   }
@@ -96,9 +120,8 @@ const ClientHomePage = ({
     <div className="flex flex-col gap-6">
       {/* Featured Products Carousel */}
       <section className="featured-products">
-        <ProductCarousel products={initialData.products.slice(0, 5)} />
+        <ProductCarousel onSlideChange={handleSlideChange} products={carouselProducts} />
       </section>
-
       {/* Catalog Section */}
       <section ref={catalogRef} className="catalog">
         <CatalogToolbar onSearch={handleSearch} onCategoryChange={handleCategoryChange} />
