@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import LoginForm from './LoginForm';
+import { Suspense } from 'react';
+import Loader from '../components/Loader';
 
 export const metadata: Metadata = {
   title: 'تسجيل الدخول | متجر تجريبي',
@@ -12,8 +14,8 @@ export const metadata: Metadata = {
 
 export default async function LoginPage() {
   return (
-    <div className="max-w-md mx-auto py-8">
+    <Suspense fallback={<Loader />}>
       <LoginForm />
-    </div>
+    </Suspense>
   );
 }
